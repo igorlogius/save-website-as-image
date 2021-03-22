@@ -1,0 +1,19 @@
+{
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "Take Screenshot"
+  },
+  "description": "",
+  "manifest_version": 2,
+  "name": "Simple-Screenshot",
+  "permissions": [
+    "activeTab"
+    ,"<all_urls>"
+  ],
+  "version": "0.1.0"
+}
