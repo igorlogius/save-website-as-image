@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Details
+# https://addons.mozilla.org/en-US/firefox/addon/Simple-Screenshot
+
+# check requirements
+MISSING_REQ=0
+for req in mktemp wget unzip zip grep cut date;do
+	type $req >/dev/null 2>&1 || { echo >&2 "Missing dependency: $req"; MISSING_REQ=1; }
+done
+
+[ $MISSING_REQ -ne 0 ] && { echo "Aborting because of missing dependency"; exit 1; }
+
+# create tmp storage
+ZIPFILE=$(mktemp)
+EXTRDIR=$(mktemp -d)
+
+# download latest source
+wget -q --show-progress 'https://github.com/igorlogius/Simple-Screenshot/archive/main.zip' -O $ZIPFILE
+
+# extract without paths and README
+unzip -j $ZIPFILE -d $EXTRDIR -x "*/README"
+
+# re-pack as xpi (zip) without paths and extended file attributes 
+XPI="Simple-Screenshot-$(grep '"version"' $EXTRDIR/manifest.json |cut -d'"' -f4)-$(date '+%F_%T').xpi" 
+zip -X -j $XPI $EXTRDIR/*
+
+# remove tmp storage
+rm -f $EXTRDIR/* && rmdir $EXTRDIR/
+
+# show content of xpi
+unzip -l $XPI
+
