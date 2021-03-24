@@ -4,6 +4,9 @@
       "background.js"
     ]
   },
+  "icons": {
+    "128": "icon.png"
+  },
   "browser_action": {
     "browser_style": true,
     "default_title": "Take Screenshot"
@@ -15,5 +18,5 @@
     "activeTab"
     ,"<all_urls>"
   ],
-  "version": "0.1.0"
+  "version": "0.1.1"
 }
