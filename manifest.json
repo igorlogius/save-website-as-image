@@ -7,16 +7,25 @@
   "icons": {
     "128": "icon.png"
   },
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Alt+S"
+      }
+    }
+  },
   "browser_action": {
     "browser_style": true,
     "default_title": "Take Screenshot"
   },
-  "description": "",
+  "description": "Take a screenshot of the currently activ tab",
   "manifest_version": 2,
   "name": "Simple-Screenshot",
   "permissions": [
-    "activeTab"
-    ,"<all_urls>"
+    "activeTab",
+    "<all_urls>",
+    "downloads"
   ],
   "version": "0.1.1"
 }
+
