@@ -1,9 +1,4 @@
 {
-  "background": {
-    "scripts": [
-      "background.js"
-    ]
-  },
   "icons": {
     "128": "icon.png"
   },
@@ -16,16 +11,16 @@
   },
   "browser_action": {
     "browser_style": true,
-    "default_title": "Take Screenshot"
+    "default_title": "Simple-Screenshot",
+    "default_popup": "background.html"
   },
   "description": "Take a screenshot of the currently activ tab",
   "manifest_version": 2,
   "name": "Simple-Screenshot",
   "permissions": [
-    "activeTab",
-    "<all_urls>",
-    "downloads"
+    "activeTab"
+    ,"<all_urls>"
   ],
-  "version": "0.1.1"
+  "version": "0.1.2"
 }
 
