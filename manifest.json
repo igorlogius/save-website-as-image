@@ -1,6 +1,8 @@
 {
-  "icons": {
-    "128": "icon.png"
+  "browser_action": {
+    "browser_style": true,
+    "default_popup": "background.html",
+    "default_title": "simple-screenshot"
   },
   "commands": {
     "_execute_browser_action": {
@@ -9,18 +11,15 @@
       }
     }
   },
-  "browser_action": {
-    "browser_style": true,
-    "default_title": "Simple-Screenshot",
-    "default_popup": "background.html"
-  },
   "description": "Take a screenshot of the currently activ tab",
+  "icons": {
+    "128": "icon.png"
+  },
   "manifest_version": 2,
-  "name": "Simple-Screenshot",
+  "name": "simple-screenshot",
   "permissions": [
-    "activeTab"
-    ,"<all_urls>"
+    "activeTab",
+    "<all_urls>"
   ],
   "version": "1.0.1"
 }
-

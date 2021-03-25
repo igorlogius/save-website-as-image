@@ -1,5 +1,5 @@
 //const options = { format: "png" };
-const extId = "Simple-Screenshot";
+const extId = "simple-screenshot";
 const link = document.querySelector('#link');
 
 function getFilename() {
