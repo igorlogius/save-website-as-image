@@ -3,7 +3,7 @@
   "browser_action": {
     "browser_style": true,
     "default_popup": "background.html",
-    "default_title": "simple-screenshot"
+    "default_title": "tab2img"
   },
   "commands": {
     "_execute_browser_action": {
@@ -12,15 +12,15 @@
       }
     }
   },
-  "description": "Take a screenshot of the currently activ tab",
+  "description": "Save page in the activ tab as an png image",
   "icons": {
     "128": "icon.png"
   },
   "manifest_version": 2,
-  "name": "simple-screenshot",
+  "name": "tab2img",
   "permissions": [
     "activeTab",
     "<all_urls>"
   ],
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

@@ -1,7 +1,7 @@
 //const options = { format: "png" };
 
 (async () => {
-	const extId = "simple-screenshot";
+	const extId = "tab2img";
 	const link = document.querySelector('#link');
 
 	function getFilename() {

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # variables
-ID="simple-screenshot"
+ID="tab2img"
 BRANCH="main"
 
 # check requirements
