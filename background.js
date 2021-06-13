@@ -22,10 +22,24 @@ function simulateClick(elem) {
 	elem.dispatchEvent(evt);
 }
 
-browser.tabs.captureTab(/*options*/).then(function(dataURI) {
+browser.tabs.executeScript({ code: `
+	var body = document.body,
+    	    html = document.documentElement;
+	var h = Math.max( body.scrollHeight, body.offsetHeight,  html.clientHeight, html.scrollHeight, html.offsetHeight );
+	var w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.scrollWidth, html.offsetWidth );
+	[w,h];
+`}).then( (tmp) => {
+			tmp = tmp[0];
+			if (tmp.length > 0) {
+				console.log(JSON.stringify(tmp));
+
+browser.tabs.captureTab({rect: {x:0,y:0,width: tmp[0], height: tmp[1]}}).then(function(dataURI) {
 	const filename = getFilename();
 	link.setAttribute('download', filename);
 	link.setAttribute('href', dataURI);
 	simulateClick(link);
+});
+			}
+
 });
 
