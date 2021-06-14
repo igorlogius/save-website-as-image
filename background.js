@@ -3,6 +3,7 @@
 (async () => {
 	const extId = "tab2img";
 	const link = document.querySelector('#link');
+	const message = document.querySelector('#message');
 
 	function getFilename() {
 		const d = new Date();
@@ -24,17 +25,29 @@
 		elem.dispatchEvent(evt);
 	}
 
-	let tmp = await browser.tabs.executeScript({ code: 
+	try {
+		let tmp = await browser.tabs.executeScript({ code: 
 `var body = document.body,html = document.documentElement;
 var h = Math.max( body.scrollHeight, body.offsetHeight,  html.clientHeight, html.scrollHeight, html.offsetHeight );
 var w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.scrollWidth, html.offsetWidth );
 [w,h,document.title];`
-	});
+		});
 
-	tmp = tmp[0];
-	if (tmp.length > 0) {
+		if (tmp.length < 1) {
+			throw 'Error: failed to get page width and height';
+		}
+		// executeScript returns an array with the first element being the result
+		tmp = tmp[0];
+
 		//console.log(JSON.stringify(tmp));
-		const dataURI = await browser.tabs.captureTab({rect: {x:0,y:0,width: tmp[0], height: tmp[1]}});
+		const dataURI = await browser.tabs.captureTab({
+			rect: {
+				x:0,
+				y:0,
+				width: tmp[0],
+				height: tmp[1]
+			}
+		});
 		let filename = getFilename();
 		if(tmp[2].length > 0){ 
 			filename = filename + " " + tmp[2];
@@ -42,6 +55,9 @@ var w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.sc
 		link.setAttribute('download', filename);
 		link.setAttribute('href', dataURI);
 		simulateClick(link);
+
+	}catch(e) {
+		message.innerText = 'tab2img failed: \n(' + e.toString() + ")";
 	}
 
 })();
