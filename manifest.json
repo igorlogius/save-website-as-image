@@ -17,10 +17,10 @@
     "128": "icon.png"
   },
   "manifest_version": 2,
-  "name": "tab2img",
+  "name": "save-website-as-image",
   "permissions": [
     "activeTab",
     "<all_urls>"
   ],
-  "version": "1.0.3"
+  "version": "1.0.4"
 }

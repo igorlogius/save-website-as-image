@@ -1,13 +1,17 @@
 //const options = { format: "png" };
 
 (async () => {
-	const extId = "tab2img";
+
+	const temporary = browser.runtime.id.endsWith('@temporary-addon'); // debugging?
+	const manifest = browser.runtime.getManifest();
+	const extname = manifest.name;
+
 	const link = document.querySelector('#link');
 	const message = document.querySelector('#message');
 
 	function getFilename() {
 		const d = new Date();
-		let ts = extId;
+		let ts = extname;
 		// YYYY-MM-DD-hh-mm-ss
 		[d.getFullYear(), d.getMonth()+1, d.getDate()+1, 
 			d.getHours(), d.getMinutes(), d.getSeconds()].forEach((t,i) => {
@@ -57,7 +61,7 @@ var w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.sc
 		simulateClick(link);
 
 	}catch(e) {
-		message.innerText = 'tab2img failed: \n(' + e.toString() + ")";
+		message.innerText = extname + ' failed: \n(' + e.toString() + ")";
 	}
 
 })();
