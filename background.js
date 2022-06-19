@@ -1,8 +1,9 @@
+/* global browser */
 //const options = { format: "png" };
 
 (async () => {
 
-	const temporary = browser.runtime.id.endsWith('@temporary-addon'); // debugging?
+	//const temporary = browser.runtime.id.endsWith('@temporary-addon'); // debugging?
 	const manifest = browser.runtime.getManifest();
 	const extname = manifest.name;
 
@@ -13,7 +14,7 @@
 		const d = new Date();
 		let ts = extname;
 		// YYYY-MM-DD-hh-mm-ss
-		[d.getFullYear(), d.getMonth()+1, d.getDate()+1, 
+		[d.getFullYear(), d.getMonth()+1, d.getDate()+1,
 			d.getHours(), d.getMinutes(), d.getSeconds()].forEach((t,i) => {
 				ts = ts + ((i!==3)?"-":"_") + ((t<10)?"0":"") + t;
 			});
@@ -30,7 +31,7 @@
 	}
 
 	try {
-		let tmp = await browser.tabs.executeScript({ code: 
+		let tmp = await browser.tabs.executeScript({ code:
 `var body = document.body,html = document.documentElement;
 var h = Math.max( body.scrollHeight, body.offsetHeight,  html.clientHeight, html.scrollHeight, html.offsetHeight );
 var w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.scrollWidth, html.offsetWidth );
@@ -53,7 +54,7 @@ var w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.sc
 			}
 		});
 		let filename = getFilename();
-		if(tmp[2].length > 0){ 
+		if(tmp[2].length > 0){
 			filename = filename + " " + tmp[2];
 		}
 		link.setAttribute('download', filename);
