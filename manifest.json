@@ -11,15 +11,15 @@
       }
     }
   },
-  "description": "Save page in the activ tab as an png image",
+  "description": "Save page in the activ tab as a png image",
   "icons": {
     "128": "icon.png"
   },
   "manifest_version": 2,
-  "name": "save-website-as-image",
+  "name": "Save Website as Image",
   "permissions": [
     "activeTab",
     "<all_urls>"
   ],
-  "version": "1.0.5"
+  "version": "1.0.6"
 }
