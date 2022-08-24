@@ -1,8 +1,7 @@
 {
   "author": "igorlogius",
   "browser_action": {
-    "default_popup": "background.html",
-    "default_title": "Save Website as Image"
+    "default_popup": "background.html"
   },
   "commands": {
     "_execute_browser_action": {
@@ -11,7 +10,6 @@
       }
     }
   },
-  "description": "Save page in the activ tab as a png image",
   "icons": {
     "128": "icon.png"
   },
@@ -21,5 +19,5 @@
     "activeTab",
     "<all_urls>"
   ],
-  "version": "1.0.7"
+  "version": "1.0.8"
 }

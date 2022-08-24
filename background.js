@@ -1,9 +1,7 @@
 /* global browser */
-//const options = { format: "png" };
 
 (async () => {
 
-	//const temporary = browser.runtime.id.endsWith('@temporary-addon'); // debugging?
 	const manifest = browser.runtime.getManifest();
 	const extname = manifest.name;
 
@@ -44,7 +42,6 @@ var w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.sc
 		// executeScript returns an array with the first element being the result
 		tmp = tmp[0];
 
-		//console.log(JSON.stringify(tmp));
 		const dataURI = await browser.tabs.captureTab({
 			rect: {
 				x:0,
