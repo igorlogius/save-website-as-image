@@ -43,8 +43,8 @@
   "manifest_version": 2,
   "name": "Save Website as Image",
   "permissions": [
-    "activeTab",
+    "tabs",
     "<all_urls>"
   ],
-  "version": "1.1.8"
+  "version": "1.2.8"
 }
