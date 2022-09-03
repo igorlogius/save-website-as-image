@@ -5,9 +5,6 @@
 	const manifest = browser.runtime.getManifest();
 	const extname = manifest.name;
 
-	const link = document.querySelector('#link');
-	const message = document.querySelector('#message');
-
 	function getFilename() {
 		const d = new Date();
 		let ts = extname;
@@ -19,19 +16,18 @@
 		return ts;
 	}
 
-    const tabs = await browser.tabs.query({ highlighted: true, currentWindow: true });
+    const tabs = (await browser.tabs.query({ highlighted: true, currentWindow: true })).sort( (a,b) => (a.index - b.index));
 
     let success = 0;
     let tmp = '';
 
 
-    let msg = '';
+    let msgs = [];
     const tsFilename = getFilename();
+
 
     for(const tab of tabs) {
         try {
-            //console.log(tab.id, tab.index);
-            //await browser.tabs.highlight({tabs: [tab.index]});
             tmp = await browser.tabs.executeScript(tab.id, { code:
     `var body = document.body,html = document.documentElement;
     var h = Math.max( body.scrollHeight, body.offsetHeight,  html.clientHeight, html.scrollHeight, html.offsetHeight );
@@ -57,19 +53,28 @@
             if(tmp[2].length > 0){
                 filename = filename + " " + tmp[2];
             }
+            const link = document.createElement('a');
             link.setAttribute('download', filename);
             link.setAttribute('href', dataURI);
             link.click();
             success++;
 
         }catch(e) {
-            //message.innerText += extname + ' failed: \n(' + e.toString() + ")";
-            msg +=  (" - " + tab.url + " (" + e.toString() + ")\n");
+            const p = document.createElement('div');
+            p.innerText = ' - Tab ' + (tab.index+1)  + ' (' + e.toString() + ')';
+            msgs.push(p);
         }
     }
+    document.body.innerText = '';
+
     if(success === tabs.length){
-        message.innerText = 'Saved all selected';
+        document.body.style.backgroundColor = 'lightgreen';
+        document.body.innerText = 'Saved Websites';
+        setTimeout(window.close, 2700);
     }else{
-        message.innerText = 'Failed to save:\n' + msg;
+        document.body.style.backgroundColor = 'lightpink';
+        for(const m of msgs){
+            document.body.appendChild(m);
+        }
     }
 })();
