@@ -24,8 +24,8 @@
     let success = 0;
     let tmp = '';
 
-    message.innerText = 'Failed to save:\n';
 
+    let msg = '';
     const tsFilename = getFilename();
 
     for(const tab of tabs) {
@@ -64,11 +64,12 @@
 
         }catch(e) {
             //message.innerText += extname + ' failed: \n(' + e.toString() + ")";
-            message.innerText +=  (" - " + tab.url + " (" + e.toString() + ")\n");
+            msg +=  (" - " + tab.url + " (" + e.toString() + ")\n");
         }
     }
     if(success === tabs.length){
         message.innerText = 'Saved all selected';
+    }else{
+        message.innerText = 'Failed to save:\n' + msg;
     }
-
 })();
