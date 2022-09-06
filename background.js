@@ -9,10 +9,10 @@
 		const d = new Date();
 		let ts = extname;
 		// YYYY-MM-DD-hh-mm-ss
-		[d.getFullYear(), d.getMonth()+1, d.getDate()+1,
-			d.getHours(), d.getMinutes(), d.getSeconds()].forEach((t,i) => {
-				ts = ts + ((i!==3)?"-":"_") + ((t<10)?"0":"") + t;
-			});
+        [d.getFullYear(), d.getMonth()+1, d.getDate()+1,
+            d.getHours(), d.getMinutes(), d.getSeconds()].forEach((t,i) => {
+            ts = ts + ((i!==3)?"-":" ") + ((t<10)?"0":"") + t;
+		});
 		return ts;
 	}
 
@@ -32,7 +32,7 @@
     `var body = document.body,html = document.documentElement;
     var h = Math.max( body.scrollHeight, body.offsetHeight,  html.clientHeight, html.scrollHeight, html.offsetHeight );
     var w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.scrollWidth, html.offsetWidth );
-    [w,h,document.title];`
+    [w,h,window.location.href, document.title];`
             });
 
             if (tmp.length < 1) {
@@ -49,10 +49,15 @@
                     height: tmp[1]
                 }
             });
-            let filename = tsFilename + "_" + success;
+            let filename = tsFilename + " " + success;
             if(tmp[2].length > 0){
                 filename = filename + " " + tmp[2];
             }
+            if(tmp[3].length > 0){
+                filename = filename + " " + tmp[3];
+            }
+            filename = filename.replaceAll('.','_');
+
             const link = document.createElement('a');
             link.setAttribute('download', filename);
             link.setAttribute('href', dataURI);
