@@ -41,28 +41,48 @@
             // executeScript returns an array with the first element being the result
             tmp = tmp[0];
 
-            const dataURI = await browser.tabs.captureTab(tab.id,{
-                rect: {
-                    x:0,
-                    y:0,
-                    width: tmp[0],
-                    height: tmp[1]
-                }
-            });
-            let filename = tsFilename + " " + success;
-            if(tmp[2].length > 0){
-                filename = filename + " " + tmp[2];
-            }
-            if(tmp[3].length > 0){
-                filename = filename + " " + tmp[3];
-            }
-            filename = filename.replaceAll('.','_');
+	    //console.debug(tmp[0],tmp[1]);
+	    
+	    const stepHeight = 10000;
+		let dataURI;
 
-            const link = document.createElement('a');
-            link.setAttribute('download', filename);
-            link.setAttribute('href', dataURI);
-            link.click();
-            success++;
+
+		// First Part (try to get entries page)
+
+		let y_offset = 0;
+			let i=1;
+
+		    while(tmp[1] > y_offset){
+
+			    dataURI = await browser.tabs.captureTab(tab.id,{
+				rect: {
+				    x:0,
+				    y:y_offset,
+				    width: tmp[0],
+				    height: (tmp[1] > (y_offset+stepHeight))? stepHeight: (tmp[1]-y_offset)
+				}
+			    });
+			    y_offset = y_offset + stepHeight;
+
+			    	    let filename = tsFilename + " Tab " + success + " Part " + (i) ;
+				    if(tmp[2].length > 0){
+					filename = filename + " " + tmp[2];
+				    }
+				    if(tmp[3].length > 0){
+					filename = filename + " " + tmp[3];
+				    }
+				    filename = filename.replaceAll('.','_');
+
+				    const link = document.createElement('a');
+				    link.setAttribute('download', filename);
+				    link.setAttribute('href', dataURI);
+				    link.click();
+			    	    link.remove();
+			    i++;
+		    }
+				
+	    
+	    success++;
 
         }catch(e) {
             const p = document.createElement('div');
