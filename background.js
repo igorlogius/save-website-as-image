@@ -104,7 +104,7 @@ async function onBAClicked() {
 	    success++;
 
         }catch(e) {
-            msgs.push(' - Tab ' + (tab.index+1)  + ' (' + e.toString() + ')');
+            msgs.push(' - Tab ' + tab.url  + ' (' + e.toString() + ')');
         }
     }
 
