@@ -1,30 +1,51 @@
 /* global browser */
 
-(async () => {
+const manifest = browser.runtime.getManifest();
+const extname = manifest.name;
 
-	const manifest = browser.runtime.getManifest();
-	const extname = manifest.name;
+function notify(title, message = "", iconUrl = "icon.png") {
+    return browser.notifications.create(""+Date.now(),
+        {
+           "type": "basic"
+            ,iconUrl
+            ,title
+            ,message
+        }
+    );
+}
 
-	function getFilename() {
-		const d = new Date();
-		let ts = extname;
-		// YYYY-MM-DD-hh-mm-ss
-        [d.getFullYear(), d.getMonth()+1, d.getDate()+1,
-            d.getHours(), d.getMinutes(), d.getSeconds()].forEach((t,i) => {
-            ts = ts + ((i!==3)?"-":" ") + ((t<10)?"0":"") + t;
-		});
-		return ts;
-	}
+function getFilename() {
+	const d = new Date();
+	let ts = extname;
+	// YYYY-MM-DD-hh-mm-ss
+[d.getFullYear(), d.getMonth()+1, d.getDate()+1,
+    d.getHours(), d.getMinutes(), d.getSeconds()].forEach((t,i) => {
+    ts = ts + ((i!==3)?"-":" ") + ((t<10)?"0":"") + t;
+	});
+	return ts;
+}
+
+async function getFromStorage(type, id, fallback) {
+    let tmp = await browser.storage.local.get(id);
+    return (typeof tmp[id] === type) ? tmp[id] : fallback;
+}
+
+async function onBAClicked() {
 
     const tabs = (await browser.tabs.query({ highlighted: true, currentWindow: true })).sort( (a,b) => (a.index - b.index));
+
+    if(tabs.length < 0){
+	    return;
+    }
+    notify(extname, "Capturing Images for " + tabs.length + " Tabs");
+
+    const stepHeight = await getFromStorage('number', 'stepHeight',10000);
 
     let success = 0;
     let tmp = '';
 
-
     let msgs = [];
     const tsFilename = getFilename();
-
 
     for(const tab of tabs) {
         try {
@@ -43,9 +64,7 @@
 
 	    //console.debug(tmp[0],tmp[1]);
 	    
-	    const stepHeight = 10000;
 		let dataURI;
-
 
 		// First Part (try to get entries page)
 
@@ -85,21 +104,16 @@
 	    success++;
 
         }catch(e) {
-            const p = document.createElement('div');
-            p.innerText = ' - Tab ' + (tab.index+1)  + ' (' + e.toString() + ')';
-            msgs.push(p);
+            msgs.push(' - Tab ' + (tab.index+1)  + ' (' + e.toString() + ')');
         }
     }
-    document.body.innerText = '';
 
     if(success === tabs.length){
-        document.body.style.backgroundColor = 'lightgreen';
-        document.body.innerText = 'Saved Websites';
-        setTimeout(window.close, 2700);
+    	notify(extname, "Completed");
     }else{
-        document.body.style.backgroundColor = 'lightpink';
-        for(const m of msgs){
-            document.body.appendChild(m);
-        }
+    	notify(extname, "Completed with errors:\n " + msgs.join("\n") );
     }
-})();
+}
+
+browser.browserAction.onClicked.addListener(onBAClicked);
+
