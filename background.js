@@ -74,6 +74,8 @@ async function onBAClicked() {
 		    while(tmp[1] > y_offset){
 
 			    dataURI = await browser.tabs.captureTab(tab.id,{
+				format: "jpeg",
+				quality: 90,
 				rect: {
 				    x:0,
 				    y:y_offset,

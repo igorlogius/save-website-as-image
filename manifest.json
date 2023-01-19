@@ -7,8 +7,8 @@
   "browser_action": {
     "theme_icons": [
       {
-        "light": "icon.png",
-        "dark": "dark.png",
+        "light": "dark.png",
+        "dark": "icon.png",
         "size": 128
       }
     ]
@@ -35,5 +35,5 @@
   "options_ui": {
     "page": "options.html"
   },
-  "version": "1.4.15"
+  "version": "1.4.16"
 }
