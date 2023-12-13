@@ -1,7 +1,7 @@
 Simple addon, to save the full website of one or more tabs as a png image either via a click on the toolbar icon or via a custom shotcut  
 
 
-
+<b>Short Demo Video: </b>
 https://github.com/igorlogius/save-website-as-image/assets/67047467/a2d5618a-9760-4410-9661-acc5702f52fe
 
 
