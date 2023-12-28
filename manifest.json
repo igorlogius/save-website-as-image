@@ -27,9 +27,10 @@
   "manifest_version": 2,
   "name": "Save Website as Image",
   "description": "Simple addon, to save the full website of one or more tabs as a png image either via a click on the toolbar icon or via a custom shotcut",
-  "permissions": ["notifications", "storage", "tabs", "<all_urls>"],
+  "permissions": ["storage", "tabs", "<all_urls>"],
+  "optional_permissions": ["notifications"],
   "options_ui": {
     "page": "options.html"
   },
-  "version": "1.4.18"
+  "version": "1.4.19"
 }

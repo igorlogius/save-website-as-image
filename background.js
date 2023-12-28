@@ -5,33 +5,20 @@ const extname = manifest.name;
 
 let nid = null;
 
-function notify(title, message = "", iconUrl = "icon.png") {
-  if (nid !== null) {
-    browser.notifications.clear(nid);
+async function notify(title, message = "", iconUrl = "icon.png") {
+  try {
+    if (nid !== null) {
+      await browser.notifications.clear(nid);
+    }
+    nid = await browser.notifications.create("" + Date.now(), {
+      type: "basic",
+      iconUrl,
+      title,
+      message,
+    });
+  } catch (e) {
+    //noop
   }
-  browser.notifications.create("" + Date.now(), {
-    type: "basic",
-    iconUrl,
-    title,
-    message,
-  });
-}
-
-function getFilename() {
-  const d = new Date();
-  let ts = "SWAI";
-  // YYYY-MM-DD-hh-mm-ss
-  [
-    d.getFullYear(),
-    d.getMonth() + 1,
-    d.getDate() + 1,
-    d.getHours(),
-    d.getMinutes(),
-    d.getSeconds(),
-  ].forEach((t, i) => {
-    ts = ts + (i !== 3 ? "-" : " ") + (t < 10 ? "0" : "") + t;
-  });
-  return ts;
 }
 
 async function getFromStorage(type, id, fallback) {
@@ -39,16 +26,15 @@ async function getFromStorage(type, id, fallback) {
   return typeof tmp[id] === type ? tmp[id] : fallback;
 }
 
-async function onBAClicked() {
+async function onBAClicked(tab) {
+  browser.browserAction.disable();
+
   let zip = new JSZip();
 
   const tabs = (
     await browser.tabs.query({ highlighted: true, currentWindow: true })
   ).sort((a, b) => a.index - b.index);
 
-  if (tabs.length < 0) {
-    return;
-  }
   notify(extname, "Saving, ... ");
 
   const stepHeight = await getFromStorage("number", "stepHeight", 10000);
@@ -57,7 +43,6 @@ async function onBAClicked() {
   let tmp = "";
 
   let msgs = [];
-  const tsFilename = getFilename();
 
   for (const tab of tabs) {
     try {
@@ -76,10 +61,7 @@ async function onBAClicked() {
 
       //console.debug(tmp[0],tmp[1]);
 
-      let dataURI;
-
-      let y_offset = 0;
-      let i = 1;
+      let dataURI = "";
 
       // only one image
       if (tmp[1] <= stepHeight) {
@@ -90,7 +72,7 @@ async function onBAClicked() {
           quality: 90,
           rect: {
             x: 0,
-            y: y_offset,
+            y: 0,
             width: tmp[0],
             height: tmp[1],
           },
@@ -101,44 +83,45 @@ async function onBAClicked() {
         link.setAttribute("href", dataURI);
         link.click();
         link.remove();
+      } else {
+        let i = 1;
+        let y_offset = 0;
+        while (tmp[1] > y_offset) {
+          dataURI = await browser.tabs.captureTab(tab.id, {
+            format: "jpeg",
+            quality: 90,
+            rect: {
+              x: 0,
+              y: y_offset,
+              width: tmp[0],
+              height:
+                tmp[1] > y_offset + stepHeight ? stepHeight : tmp[1] - y_offset,
+            },
+          });
 
-        return;
+          y_offset = y_offset + stepHeight;
+
+          let blob = await fetch(dataURI).then((r) => r.blob());
+          zip.file(i + ".jpg", blob, { binary: true });
+          i++;
+        }
+
+        const content = await zip.generateAsync({ type: "blob" });
+        saveAs(content, tab.title + tab.url + ".cbz");
+
+        success++;
       }
-
-      while (tmp[1] > y_offset) {
-        dataURI = await browser.tabs.captureTab(tab.id, {
-          format: "jpeg",
-          quality: 90,
-          rect: {
-            x: 0,
-            y: y_offset,
-            width: tmp[0],
-            height:
-              tmp[1] > y_offset + stepHeight ? stepHeight : tmp[1] - y_offset,
-          },
-        });
-
-        y_offset = y_offset + stepHeight;
-
-        let blob = await fetch(dataURI).then((r) => r.blob());
-        zip.file(i + ".jpg", blob, { binary: true });
-        i++;
-      }
-
-      const content = await zip.generateAsync({ type: "blob" });
-      saveAs(content, tab.title + tab.url + ".zip");
-
-      success++;
     } catch (e) {
       msgs.push(" - Tab " + tab.url + " (" + e.toString() + ")");
     }
-  }
+  } // for  tabs
 
   if (success === tabs.length) {
     notify(extname, "Done!");
   } else {
     notify(extname, "Failed! " + msgs.join("\n"));
   }
+  browser.browserAction.enable();
 }
 
 browser.browserAction.onClicked.addListener(onBAClicked);
