@@ -3,8 +3,13 @@
 const manifest = browser.runtime.getManifest();
 const extname = manifest.name;
 
+let nid = null;
+
 function notify(title, message = "", iconUrl = "icon.png") {
-  return browser.notifications.create("" + Date.now(), {
+  if (nid !== null) {
+    browser.notifications.clear(nid);
+  }
+  browser.notifications.create("" + Date.now(), {
     type: "basic",
     iconUrl,
     title,
@@ -35,6 +40,8 @@ async function getFromStorage(type, id, fallback) {
 }
 
 async function onBAClicked() {
+  let zip = new JSZip();
+
   const tabs = (
     await browser.tabs.query({ highlighted: true, currentWindow: true })
   ).sort((a, b) => a.index - b.index);
@@ -42,7 +49,7 @@ async function onBAClicked() {
   if (tabs.length < 0) {
     return;
   }
-  notify(extname, "Capturing Images for " + tabs.length + " Tabs");
+  notify(extname, "Saving, ... ");
 
   const stepHeight = await getFromStorage("number", "stepHeight", 10000);
 
@@ -71,10 +78,32 @@ async function onBAClicked() {
 
       let dataURI;
 
-      // First Part (try to get entries page)
-
       let y_offset = 0;
       let i = 1;
+
+      // only one image
+      if (tmp[1] <= stepHeight) {
+        // only generate one image
+
+        dataURI = await browser.tabs.captureTab(tab.id, {
+          format: "jpeg",
+          quality: 90,
+          rect: {
+            x: 0,
+            y: y_offset,
+            width: tmp[0],
+            height: tmp[1],
+          },
+        });
+
+        const link = document.createElement("a");
+        link.setAttribute("download", tab.title + tab.url);
+        link.setAttribute("href", dataURI);
+        link.click();
+        link.remove();
+
+        return;
+      }
 
       while (tmp[1] > y_offset) {
         dataURI = await browser.tabs.captureTab(tab.id, {
@@ -88,24 +117,16 @@ async function onBAClicked() {
               tmp[1] > y_offset + stepHeight ? stepHeight : tmp[1] - y_offset,
           },
         });
+
         y_offset = y_offset + stepHeight;
 
-        let filename = tsFilename + " Tab " + success + " Part " + i;
-        if (tmp[2].length > 0) {
-          filename = filename + " " + tmp[2].substr(8, 35);
-        }
-        if (tmp[3].length > 0) {
-          filename = filename + " " + tmp[3].substr(0, 45);
-        }
-        filename = filename.replaceAll(".", "_");
-
-        const link = document.createElement("a");
-        link.setAttribute("download", filename);
-        link.setAttribute("href", dataURI);
-        link.click();
-        link.remove();
+        let blob = await fetch(dataURI).then((r) => r.blob());
+        zip.file(i + ".jpg", blob, { binary: true });
         i++;
       }
+
+      const content = await zip.generateAsync({ type: "blob" });
+      saveAs(content, tab.title + tab.url + ".zip");
 
       success++;
     } catch (e) {
@@ -114,9 +135,9 @@ async function onBAClicked() {
   }
 
   if (success === tabs.length) {
-    notify(extname, "Completed");
+    notify(extname, "Done!");
   } else {
-    notify(extname, "Completed with errors:\n " + msgs.join("\n"));
+    notify(extname, "Failed! " + msgs.join("\n"));
   }
 }
 
