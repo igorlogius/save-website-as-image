@@ -109,8 +109,8 @@ async function onBAClicked(tab) {
         const content = await zip.generateAsync({ type: "blob" });
         saveAs(content, tab.title + tab.url + ".cbz");
 
-        success++;
       }
+      success++;
     } catch (e) {
       msgs.push(" - Tab " + tab.url + " (" + e.toString() + ")");
     }
