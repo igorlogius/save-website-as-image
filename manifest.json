@@ -1,6 +1,6 @@
 {
   "author": "igorlogius",
-  "homepage_url": "https://github.com/igorlogius/save-website-as-image",
+  "homepage_url": "https://github.com/igorlogius",
   "background": {
     "scripts": ["FileSaver.js", "jszip.js", "background.js"]
   },
@@ -32,5 +32,5 @@
   "options_ui": {
     "page": "options.html"
   },
-  "version": "1.4.20"
+  "version": "1.4.21"
 }
