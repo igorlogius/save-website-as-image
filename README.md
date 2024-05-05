@@ -1,5 +1,6 @@
-Simple addon, to save the full website of one or more tabs as a png image either via a click on the toolbar icon or via a custom shotcut
+Simple addon, to save the full website of one or more tabs as a png image either via a click on the toolbar icon or via a custom shortcut
 
+### [Click here to report a bug, make a suggestion or ask a question](https://github.com/igorlogius/igorlogius/issues/new/choose)
 
 <b>Short Demo Video: </b>
 
