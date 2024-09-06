@@ -1,8 +1,8 @@
 {
   "author": "igorlogius",
-  "homepage_url": "https://github.com/igorlogius",
+  "homepage_url": "https://github.com/igorlogius/save-website-as-image",
   "background": {
-    "scripts": ["FileSaver.js", "jszip.js", "background.js"]
+    "scripts": ["jszip.js", "background.js"]
   },
   "browser_action": {
     "default_area": "navbar",
@@ -26,11 +26,10 @@
   },
   "manifest_version": 2,
   "name": "Save Website as Image",
-  "description": "Simple addon, to save the full website of one or more tabs as a png image either via a click on the toolbar icon or via a custom shotcut",
+  "description": "Simple addon, to save a snapshot of a website via a click on the toolbar icon or a custom shortcut",
   "permissions": ["storage", "tabs", "<all_urls>"],
-  "optional_permissions": ["notifications"],
   "options_ui": {
     "page": "options.html"
   },
-  "version": "1.4.21"
+  "version": "1.4.22"
 }

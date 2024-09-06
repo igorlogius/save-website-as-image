@@ -52,7 +52,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
           e,
           t,
           n,
-          r
+          r,
         );
       }
       return n[o].exports;
@@ -102,7 +102,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 _keyStr.charAt(enc1) +
                   _keyStr.charAt(enc2) +
                   _keyStr.charAt(enc3) +
-                  _keyStr.charAt(enc4)
+                  _keyStr.charAt(enc4),
               );
             }
 
@@ -126,7 +126,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               // *can't* be sure it is one: removing everything up to the comma would
               // be too dangerous.
               throw new Error(
-                "Invalid base64 input, it looks like a data url."
+                "Invalid base64 input, it looks like a data url.",
               );
             }
 
@@ -204,7 +204,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             uncompressedSize,
             crc32,
             compression,
-            data
+            data,
           ) {
             this.compressedSize = compressedSize;
             this.uncompressedSize = uncompressedSize;
@@ -220,7 +220,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
              */
             getContentWorker: function () {
               var worker = new DataWorker(
-                external.Promise.resolve(this.compressedContent)
+                external.Promise.resolve(this.compressedContent),
               )
                 .pipe(this.compression.uncompressWorker())
                 .pipe(new DataLengthProbe("data_length"));
@@ -239,7 +239,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
              */
             getCompressedWorker: function () {
               return new DataWorker(
-                external.Promise.resolve(this.compressedContent)
+                external.Promise.resolve(this.compressedContent),
               )
                 .withStreamInfo("compressedSize", this.compressedSize)
                 .withStreamInfo("uncompressedSize", this.uncompressedSize)
@@ -259,7 +259,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
           CompressedObject.createWorkerFrom = function (
             uncompressedWorker,
             compression,
-            compressionOptions
+            compressionOptions,
           ) {
             return uncompressedWorker
               .pipe(new Crc32Probe())
@@ -601,27 +601,27 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             streamingEnded,
             offset,
             platform,
-            encodeFileName
+            encodeFileName,
           ) {
             var file = streamInfo["file"],
               compression = streamInfo["compression"],
               useCustomEncoding = encodeFileName !== utf8.utf8encode,
               encodedFileName = utils.transformTo(
                 "string",
-                encodeFileName(file.name)
+                encodeFileName(file.name),
               ),
               utfEncodedFileName = utils.transformTo(
                 "string",
-                utf8.utf8encode(file.name)
+                utf8.utf8encode(file.name),
               ),
               comment = file.comment,
               encodedComment = utils.transformTo(
                 "string",
-                encodeFileName(comment)
+                encodeFileName(comment),
               ),
               utfEncodedComment = utils.transformTo(
                 "string",
-                utf8.utf8encode(comment)
+                utf8.utf8encode(comment),
               ),
               useUTF8ForFileName =
                 utfEncodedFileName.length !== file.name.length,
@@ -673,14 +673,14 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               versionMadeBy = 0x031e; // UNIX, version 3.0
               extFileAttr |= generateUnixExternalFileAttr(
                 file.unixPermissions,
-                dir
+                dir,
               );
             } else {
               // DOS or other, fallback to DOS
               versionMadeBy = 0x0014; // DOS, version 2.0
               extFileAttr |= generateDosExternalFileAttr(
                 file.dosPermissions,
-                dir
+                dir,
               );
             }
 
@@ -818,12 +818,12 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             centralDirLength,
             localDirLength,
             comment,
-            encodeFileName
+            encodeFileName,
           ) {
             var dirEnd = "";
             var encodedComment = utils.transformTo(
               "string",
-              encodeFileName(comment)
+              encodeFileName(comment),
             );
 
             // end of central dir signature
@@ -881,7 +881,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             streamFiles,
             comment,
             platform,
-            encodeFileName
+            encodeFileName,
           ) {
             GenericWorker.call(this, "ZipFileWorker");
             // The number of bytes written so far. This doesn't count accumulated chunks.
@@ -960,7 +960,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 false,
                 this.currentSourceOffset,
                 this.zipPlatform,
-                this.encodeFileName
+                this.encodeFileName,
               );
               this.push({
                 data: record.fileRecord,
@@ -985,7 +985,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               true,
               this.currentSourceOffset,
               this.zipPlatform,
-              this.encodeFileName
+              this.encodeFileName,
             );
 
             this.dirRecords.push(record.dirRecord);
@@ -1027,7 +1027,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               centralDirLength,
               localDirLength,
               this.zipComment,
-              this.encodeFileName
+              this.encodeFileName,
             );
 
             this.push({
@@ -1152,7 +1152,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             var compression = compressions[compressionName];
             if (!compression) {
               throw new Error(
-                compressionName + " is not a valid compression method !"
+                compressionName + " is not a valid compression method !",
               );
             }
             return compression;
@@ -1169,7 +1169,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               options.streamFiles,
               comment,
               options.platform,
-              options.encodeFileName
+              options.encodeFileName,
             );
             var entriesCount = 0;
             try {
@@ -1177,7 +1177,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 entriesCount++;
                 var compression = getCompression(
                   file.options.compression,
-                  options.compression
+                  options.compression,
                 );
                 var compressionOptions =
                   file.options.compressionOptions ||
@@ -1224,7 +1224,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
 
             if (arguments.length) {
               throw new Error(
-                "The constructor with parameters has been removed in JSZip 3.0, please check the upgrade guide."
+                "The constructor with parameters has been removed in JSZip 3.0, please check the upgrade guide.",
               );
             }
 
@@ -1322,8 +1322,8 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             if (nodejsUtils.isNode && nodejsUtils.isStream(data)) {
               return external.Promise.reject(
                 new Error(
-                  "JSZip can't accept a stream when loading a zip file."
-                )
+                  "JSZip can't accept a stream when loading a zip file.",
+                ),
               );
             }
 
@@ -1333,7 +1333,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 data,
                 true,
                 options.optimizedBinaryString,
-                options.base64
+                options.base64,
               )
               .then(function (data) {
                 var zipEntries = new ZipEntries(options);
@@ -1401,7 +1401,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
           function NodejsStreamInputAdapter(filename, stream) {
             GenericWorker.call(
               this,
-              "Nodejs stream input adapter for " + filename
+              "Nodejs stream input adapter for " + filename,
             );
             this._upstreamEnded = false;
             this._bindStream(stream);
@@ -1673,7 +1673,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 data,
                 o.binary,
                 o.optimizedBinaryString,
-                o.base64
+                o.base64,
               );
             }
 
@@ -1764,7 +1764,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
              */
             load: function () {
               throw new Error(
-                "This method has been removed in JSZip 3.0, please check the upgrade guide."
+                "This method has been removed in JSZip 3.0, please check the upgrade guide.",
               );
             },
 
@@ -1783,7 +1783,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 file = this.files[filename];
                 relativePath = filename.slice(
                   this.root.length,
-                  filename.length
+                  filename.length,
                 );
                 if (
                   relativePath &&
@@ -1913,7 +1913,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
              */
             generate: function (options) {
               throw new Error(
-                "This method has been removed in JSZip 3.0, please check the upgrade guide."
+                "This method has been removed in JSZip 3.0, please check the upgrade guide.",
               );
             },
 
@@ -1975,7 +1975,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               return new StreamHelper(
                 worker,
                 opts.type || "string",
-                opts.mimeType
+                opts.mimeType,
               );
             },
             /**
@@ -1995,7 +1995,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 options.type = "nodebuffer";
               }
               return this.generateInternalStream(options).toNodejsStream(
-                onUpdate
+                onUpdate,
               );
             },
           };
@@ -2094,7 +2094,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             }
             var result = this.data.slice(
               this.zero + this.index,
-              this.zero + this.index + size
+              this.zero + this.index + size,
             );
             this.index += size;
             return result;
@@ -2135,7 +2135,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     this.length +
                     ", asked index = " +
                     newIndex +
-                    "). Corrupted zip ?"
+                    "). Corrupted zip ?",
                 );
               }
             },
@@ -2224,8 +2224,8 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                   (dostime >> 16) & 0x1f, // day
                   (dostime >> 11) & 0x1f, // hour
                   (dostime >> 5) & 0x3f, // minute
-                  (dostime & 0x1f) << 1
-                )
+                  (dostime & 0x1f) << 1,
+                ),
               ); // second
             },
           };
@@ -2251,7 +2251,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             this.checkOffset(size);
             var result = this.data.slice(
               this.zero + this.index,
-              this.zero + this.index + size
+              this.zero + this.index + size,
             );
             this.index += size;
             return result;
@@ -2297,7 +2297,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             // this will work because the constructor applied the "& 0xff" mask.
             var result = this.data.slice(
               this.zero + this.index,
-              this.zero + this.index + size
+              this.zero + this.index + size,
             );
             this.index += size;
             return result;
@@ -2327,7 +2327,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             }
             var result = this.data.subarray(
               this.zero + this.index,
-              this.zero + this.index + size
+              this.zero + this.index + size,
             );
             this.index += size;
             return result;
@@ -2363,7 +2363,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             }
             if (support.uint8array) {
               return new Uint8ArrayReader(
-                utils.transformTo("uint8array", data)
+                utils.transformTo("uint8array", data),
               );
             }
             return new ArrayReader(utils.transformTo("array", data));
@@ -2445,7 +2445,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
           Crc32Probe.prototype.processChunk = function (chunk) {
             this.streamInfo.crc32 = crc32(
               chunk.data,
-              this.streamInfo.crc32 || 0
+              this.streamInfo.crc32 || 0,
             );
             this.push(chunk);
           };
@@ -2525,7 +2525,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               },
               function (e) {
                 self.error(e);
-              }
+              },
             );
           }
 
@@ -2759,7 +2759,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             registerPrevious: function (previous) {
               if (this.isLocked) {
                 throw new Error(
-                  "The stream '" + this + "' has already been used."
+                  "The stream '" + this + "' has already been used.",
                 );
               }
 
@@ -2858,7 +2858,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             lock: function () {
               if (this.isLocked) {
                 throw new Error(
-                  "The stream '" + this + "' has already been used."
+                  "The stream '" + this + "' has already been used.",
                 );
               }
               this.isLocked = true;
@@ -2917,7 +2917,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               case "blob":
                 return utils.newBlob(
                   utils.transformTo("arraybuffer", content),
-                  mimeType
+                  mimeType,
                 );
               case "base64":
                 return base64.encode(content);
@@ -2991,7 +2991,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     var result = transformZipOutput(
                       resultType,
                       concat(chunkType, dataArray),
-                      mimeType
+                      mimeType,
                     );
                     resolve(result);
                   } catch (e) {
@@ -3099,7 +3099,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 // I you find this comment and have a good usecase, please open a
                 // bug report !
                 throw new Error(
-                  this._outputType + " is not supported by this method"
+                  this._outputType + " is not supported by this method",
                 );
               }
 
@@ -3108,7 +3108,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 {
                   objectMode: this._outputType !== "nodebuffer",
                 },
-                updateCb
+                updateCb,
               );
             },
           };
@@ -3396,7 +3396,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
 
             buf = utils.transformTo(
               support.uint8array ? "uint8array" : "array",
-              buf
+              buf,
             );
 
             return buf2string(buf);
@@ -3419,7 +3419,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
           Utf8DecodeWorker.prototype.processChunk = function (chunk) {
             var data = utils.transformTo(
               support.uint8array ? "uint8array" : "array",
-              chunk.data
+              chunk.data,
             );
 
             // 1st step, re-use what's left of the previous chunk
@@ -3427,7 +3427,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               if (support.uint8array) {
                 var previousData = data;
                 data = new Uint8Array(
-                  previousData.length + this.leftOver.length
+                  previousData.length + this.leftOver.length,
                 );
                 data.set(this.leftOver, 0);
                 data.set(previousData, this.leftOver.length);
@@ -3611,15 +3611,15 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                   result.push(
                     String.fromCharCode.apply(
                       null,
-                      array.slice(k, Math.min(k + chunk, len))
-                    )
+                      array.slice(k, Math.min(k + chunk, len)),
+                    ),
                   );
                 } else {
                   result.push(
                     String.fromCharCode.apply(
                       null,
-                      array.subarray(k, Math.min(k + chunk, len))
-                    )
+                      array.subarray(k, Math.min(k + chunk, len)),
+                    ),
                   );
                 }
                 k += chunk;
@@ -3703,7 +3703,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                   return arrayToStringHelper.stringifyByChunk(
                     array,
                     type,
-                    chunk
+                    chunk,
                   );
                 } catch (e) {
                   chunk = Math.floor(chunk / 2);
@@ -3749,7 +3749,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             nodebuffer: function (input) {
               return stringToArrayLike(
                 input,
-                nodejsUtils.allocBuffer(input.length)
+                nodejsUtils.allocBuffer(input.length),
               );
             },
           };
@@ -3777,7 +3777,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             array: function (input) {
               return arrayLikeToArrayLike(
                 new Uint8Array(input),
-                new Array(input.byteLength)
+                new Array(input.byteLength),
               );
             },
             arraybuffer: identity,
@@ -3961,35 +3961,35 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             inputData,
             isBinary,
             isOptimizedBinaryString,
-            isBase64
+            isBase64,
           ) {
             // if inputData is already a promise, this flatten it.
-            var promise = external.Promise.resolve(inputData).then(function (
-              data
-            ) {
-              var isBlob =
-                support.blob &&
-                (data instanceof Blob ||
-                  ["[object File]", "[object Blob]"].indexOf(
-                    Object.prototype.toString.call(data)
-                  ) !== -1);
+            var promise = external.Promise.resolve(inputData).then(
+              function (data) {
+                var isBlob =
+                  support.blob &&
+                  (data instanceof Blob ||
+                    ["[object File]", "[object Blob]"].indexOf(
+                      Object.prototype.toString.call(data),
+                    ) !== -1);
 
-              if (isBlob && typeof FileReader !== "undefined") {
-                return new external.Promise(function (resolve, reject) {
-                  var reader = new FileReader();
+                if (isBlob && typeof FileReader !== "undefined") {
+                  return new external.Promise(function (resolve, reject) {
+                    var reader = new FileReader();
 
-                  reader.onload = function (e) {
-                    resolve(e.target.result);
-                  };
-                  reader.onerror = function (e) {
-                    reject(e.target.error);
-                  };
-                  reader.readAsArrayBuffer(data);
-                });
-              } else {
-                return data;
-              }
-            });
+                    reader.onload = function (e) {
+                      resolve(e.target.result);
+                    };
+                    reader.onerror = function (e) {
+                      reject(e.target.error);
+                    };
+                    reader.readAsArrayBuffer(data);
+                  });
+                } else {
+                  return data;
+                }
+              },
+            );
 
             return promise.then(function (data) {
               var dataType = exports.getTypeOf(data);
@@ -4000,8 +4000,8 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     "Can't read the data of '" +
                       name +
                       "'. Is it " +
-                      "in a supported JavaScript type (String, Blob, ArrayBuffer, etc) ?"
-                  )
+                      "in a supported JavaScript type (String, Blob, ArrayBuffer, etc) ?",
+                  ),
                 );
               }
               // special case : it's way easier to work with Uint8Array than with ArrayBuffer
@@ -4066,7 +4066,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     utils.pretty(signature) +
                     ", expected " +
                     utils.pretty(expectedSignature) +
-                    ")"
+                    ")",
                 );
               }
             },
@@ -4105,7 +4105,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               // this is utf8 encoded unless specified otherwise.
               var decodeContent = utils.transformTo(
                 decodeParamType,
-                zipComment
+                zipComment,
               );
               this.zipComment = this.loadOptions.decodeFileName(decodeContent);
             },
@@ -4183,7 +4183,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                   {
                     zip64: this.zip64,
                   },
-                  this.loadOptions
+                  this.loadOptions,
                 );
                 file.readCentralPart(this.reader);
                 this.files.push(file);
@@ -4197,7 +4197,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     "Corrupted zip or bug: expected " +
                       this.centralDirRecords +
                       " records in central dir, got " +
-                      this.files.length
+                      this.files.length,
                   );
                 } else {
                   // We found some records but not all.
@@ -4211,7 +4211,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
              */
             readEndOfCentral: function () {
               var offset = this.reader.lastIndexOfSignature(
-                sig.CENTRAL_DIRECTORY_END
+                sig.CENTRAL_DIRECTORY_END,
               );
               if (offset < 0) {
                 // Check if the content is a truncated zip or complete garbage.
@@ -4224,11 +4224,11 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 if (isGarbage) {
                   throw new Error(
                     "Can't find end of central directory : is this a zip file ? " +
-                      "If it is, see https://stuk.github.io/jszip/documentation/howto/read_zip.html"
+                      "If it is, see https://stuk.github.io/jszip/documentation/howto/read_zip.html",
                   );
                 } else {
                   throw new Error(
-                    "Corrupted zip: can't find end of central directory"
+                    "Corrupted zip: can't find end of central directory",
                   );
                 }
               }
@@ -4268,11 +4268,11 @@ https://github.com/nodeca/pako/blob/master/LICENSE
 
                 // should look for a zip64 EOCD locator
                 offset = this.reader.lastIndexOfSignature(
-                  sig.ZIP64_CENTRAL_DIRECTORY_LOCATOR
+                  sig.ZIP64_CENTRAL_DIRECTORY_LOCATOR,
                 );
                 if (offset < 0) {
                   throw new Error(
-                    "Corrupted zip: can't find the ZIP64 end of central directory locator"
+                    "Corrupted zip: can't find the ZIP64 end of central directory locator",
                   );
                 }
                 this.reader.setIndex(offset);
@@ -4283,17 +4283,17 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 if (
                   !this.isSignature(
                     this.relativeOffsetEndOfZip64CentralDir,
-                    sig.ZIP64_CENTRAL_DIRECTORY_END
+                    sig.ZIP64_CENTRAL_DIRECTORY_END,
                   )
                 ) {
                   // console.warn("ZIP64 end of central directory not where expected.");
                   this.relativeOffsetEndOfZip64CentralDir =
                     this.reader.lastIndexOfSignature(
-                      sig.ZIP64_CENTRAL_DIRECTORY_END
+                      sig.ZIP64_CENTRAL_DIRECTORY_END,
                     );
                   if (this.relativeOffsetEndOfZip64CentralDir < 0) {
                     throw new Error(
-                      "Corrupted zip: can't find the ZIP64 end of central directory"
+                      "Corrupted zip: can't find the ZIP64 end of central directory",
                     );
                   }
                 }
@@ -4319,7 +4319,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 if (
                   this.isSignature(
                     endOfCentralDirOffset,
-                    sig.CENTRAL_FILE_HEADER
+                    sig.CENTRAL_FILE_HEADER,
                   )
                 ) {
                   // The offsets seem wrong, but we have something at the specified offset.
@@ -4331,7 +4331,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 }
               } else if (extraBytes < 0) {
                 throw new Error(
-                  "Corrupted zip: missing " + Math.abs(extraBytes) + " bytes."
+                  "Corrupted zip: missing " + Math.abs(extraBytes) + " bytes.",
                 );
               }
             },
@@ -4453,7 +4453,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               if (this.compressedSize === -1 || this.uncompressedSize === -1) {
                 throw new Error(
                   "Bug or corrupted zip : didn't get enough informations from the central directory " +
-                    "(compressedSize === -1 || uncompressedSize === -1)"
+                    "(compressedSize === -1 || uncompressedSize === -1)",
                 );
               }
 
@@ -4465,7 +4465,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     utils.pretty(this.compressionMethod) +
                     " unknown (inner file : " +
                     utils.transformTo("string", this.fileName) +
-                    ")"
+                    ")",
                 );
               }
               this.decompressed = new CompressedObject(
@@ -4473,7 +4473,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 this.uncompressedSize,
                 this.crc32,
                 compression,
-                reader.readData(this.compressedSize)
+                reader.readData(this.compressedSize),
               );
             },
 
@@ -4609,7 +4609,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                   // ASCII text or unsupported code page
                   var fileNameByteArray = utils.transformTo(
                     decodeParamType,
-                    this.fileName
+                    this.fileName,
                   );
                   this.fileNameStr =
                     this.loadOptions.decodeFileName(fileNameByteArray);
@@ -4622,7 +4622,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                   // ASCII text or unsupported code page
                   var commentByteArray = utils.transformTo(
                     decodeParamType,
-                    this.fileComment
+                    this.fileComment,
                   );
                   this.fileCommentStr =
                     this.loadOptions.decodeFileName(commentByteArray);
@@ -4650,7 +4650,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 }
 
                 return utf8.utf8decode(
-                  extraReader.readData(upathField.length - 5)
+                  extraReader.readData(upathField.length - 5),
                 );
               }
               return null;
@@ -4676,7 +4676,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 }
 
                 return utf8.utf8decode(
-                  extraReader.readData(ucommentField.length - 5)
+                  extraReader.readData(ucommentField.length - 5),
                 );
               }
               return null;
@@ -4783,7 +4783,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
              */
             nodeStream: function (type, onUpdate) {
               return this.internalStream(type || "nodebuffer").toNodejsStream(
-                onUpdate
+                onUpdate,
               );
             },
 
@@ -4808,7 +4808,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 return CompressedObject.createWorkerFrom(
                   result,
                   compression,
-                  compressionOptions
+                  compressionOptions,
                 );
               }
             },
@@ -4837,7 +4837,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
           ];
           var removedFn = function () {
             throw new Error(
-              "This method has been removed in JSZip 3.0, please check the upgrade guide."
+              "This method has been removed in JSZip 3.0, please check the upgrade guide.",
             );
           };
 
@@ -4940,7 +4940,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               ? self
               : typeof window !== "undefined"
               ? window
-              : {}
+              : {},
           );
         },
         {},
@@ -5049,7 +5049,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               if (returnValue === promise) {
                 handlers.reject(
                   promise,
-                  new TypeError("Cannot resolve promise with itself")
+                  new TypeError("Cannot resolve promise with itself"),
                 );
               } else {
                 handlers.resolve(promise, returnValue);
@@ -5229,7 +5229,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     called = true;
                     handlers.reject(promise, error);
                   }
-                }
+                },
               );
             }
           }
@@ -5391,7 +5391,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 strategy: Z_DEFAULT_STRATEGY,
                 to: "",
               },
-              options || {}
+              options || {},
             );
 
             var opt = this.options;
@@ -5416,7 +5416,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               opt.method,
               opt.windowBits,
               opt.memLevel,
-              opt.strategy
+              opt.strategy,
             );
 
             if (status !== Z_OK) {
@@ -5513,7 +5513,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               }
               status = zlib_deflate.deflate(
                 strm,
-                _mode
+                _mode,
               ); /* no bad return value */
 
               if (status !== Z_STREAM_END && status !== Z_OK) {
@@ -5529,8 +5529,8 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 if (this.options.to === "string") {
                   this.onData(
                     strings.buf2binstring(
-                      utils.shrinkBuf(strm.output, strm.next_out)
-                    )
+                      utils.shrinkBuf(strm.output, strm.next_out),
+                    ),
                   );
                 } else {
                   this.onData(utils.shrinkBuf(strm.output, strm.next_out));
@@ -5785,7 +5785,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 windowBits: 0,
                 to: "",
               },
-              options || {}
+              options || {},
             );
 
             var opt = this.options;
@@ -5909,7 +5909,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
 
               status = zlib_inflate.inflate(
                 strm,
-                c.Z_NO_FLUSH
+                c.Z_NO_FLUSH,
               ); /* no bad return value */
 
               if (status === c.Z_NEED_DICT && dictionary) {
@@ -5948,7 +5948,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                   if (this.options.to === "string") {
                     next_out_utf8 = strings.utf8border(
                       strm.output,
-                      strm.next_out
+                      strm.next_out,
                     );
 
                     tail = strm.next_out - next_out_utf8;
@@ -5963,7 +5963,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                         strm.output,
                         next_out_utf8,
                         tail,
-                        0
+                        0,
                       );
                     }
 
@@ -6365,7 +6365,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               ) {
                 return String.fromCharCode.apply(
                   null,
-                  utils.shrinkBuf(buf, len)
+                  utils.shrinkBuf(buf, len),
                 );
               }
             }
@@ -6827,7 +6827,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               s.pending_buf,
               s.pending_out,
               len,
-              strm.next_out
+              strm.next_out,
             );
             strm.next_out += len;
             s.pending_out += len;
@@ -6844,7 +6844,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               s,
               s.block_start >= 0 ? s.block_start : -1,
               s.strstart - s.block_start,
-              last
+              last,
             );
             s.block_start = s.strstart;
             flush_pending(s.strm);
@@ -7344,7 +7344,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 bflush = trees._tr_tally(
                   s,
                   s.strstart - s.match_start,
-                  s.match_length - MIN_MATCH
+                  s.match_length - MIN_MATCH,
                 );
 
                 s.lookahead -= s.match_length;
@@ -7518,7 +7518,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 bflush = trees._tr_tally(
                   s,
                   s.strstart - 1 - s.prev_match,
-                  s.prev_length - MIN_MATCH
+                  s.prev_length - MIN_MATCH,
                 );
                 /* Insert in hash table all strings up to the end of the match.
                  * strstart-1 and strstart are already inserted. If there is not
@@ -7796,7 +7796,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               4,
               8,
               4,
-              deflate_fast
+              deflate_fast,
             ) /* 1 max speed, no lazy matches */,
             new Config(4, 5, 16, 8, deflate_fast) /* 2 */,
             new Config(4, 6, 32, 32, deflate_fast) /* 3 */,
@@ -7811,7 +7811,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               258,
               258,
               4096,
-              deflate_slow
+              deflate_slow,
             ) /* 9 max compression */,
           ];
 
@@ -7961,7 +7961,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
 
             //int heap[2*L_CODES+1];      /* heap used to build the Huffman trees */
             this.heap = new utils.Buf16(
-              2 * L_CODES + 1
+              2 * L_CODES + 1,
             ); /* heap used to build the Huffman trees */
             zero(this.heap);
 
@@ -8083,7 +8083,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             method,
             windowBits,
             memLevel,
-            strategy
+            strategy,
           ) {
             if (!strm) {
               // === Z_NULL
@@ -8175,7 +8175,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               Z_DEFLATED,
               MAX_WBITS,
               DEF_MEM_LEVEL,
-              Z_DEFAULT_STRATEGY
+              Z_DEFAULT_STRATEGY,
             );
           }
 
@@ -8196,7 +8196,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             ) {
               return err(
                 strm,
-                strm.avail_out === 0 ? Z_BUF_ERROR : Z_STREAM_ERROR
+                strm.avail_out === 0 ? Z_BUF_ERROR : Z_STREAM_ERROR,
               );
             }
 
@@ -8225,7 +8225,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                       ? 2
                       : s.strategy >= Z_HUFFMAN_ONLY || s.level < 2
                       ? 4
-                      : 0
+                      : 0,
                   );
                   put_byte(s, OS_CODE);
                   s.status = BUSY_STATE;
@@ -8236,7 +8236,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                       (s.gzhead.hcrc ? 2 : 0) +
                       (!s.gzhead.extra ? 0 : 4) +
                       (!s.gzhead.name ? 0 : 8) +
-                      (!s.gzhead.comment ? 0 : 16)
+                      (!s.gzhead.comment ? 0 : 16),
                   );
                   put_byte(s, s.gzhead.time & 0xff);
                   put_byte(s, (s.gzhead.time >> 8) & 0xff);
@@ -8248,7 +8248,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                       ? 2
                       : s.strategy >= Z_HUFFMAN_ONLY || s.level < 2
                       ? 4
-                      : 0
+                      : 0,
                   );
                   put_byte(s, s.gzhead.os & 0xff);
                   if (s.gzhead.extra && s.gzhead.extra.length) {
@@ -8305,7 +8305,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                         strm.adler,
                         s.pending_buf,
                         s.pending - beg,
-                        beg
+                        beg,
                       );
                     }
                     flush_pending(strm);
@@ -8322,7 +8322,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     strm.adler,
                     s.pending_buf,
                     s.pending - beg,
-                    beg
+                    beg,
                   );
                 }
                 if (s.gzindex === s.gzhead.extra.length) {
@@ -8345,7 +8345,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                         strm.adler,
                         s.pending_buf,
                         s.pending - beg,
-                        beg
+                        beg,
                       );
                     }
                     flush_pending(strm);
@@ -8369,7 +8369,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     strm.adler,
                     s.pending_buf,
                     s.pending - beg,
-                    beg
+                    beg,
                   );
                 }
                 if (val === 0) {
@@ -8392,7 +8392,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                         strm.adler,
                         s.pending_buf,
                         s.pending - beg,
-                        beg
+                        beg,
                       );
                     }
                     flush_pending(strm);
@@ -8416,7 +8416,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     strm.adler,
                     s.pending_buf,
                     s.pending - beg,
-                    beg
+                    beg,
                   );
                 }
                 if (val === 0) {
@@ -8651,7 +8651,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 dictionary,
                 dictLength - s.w_size,
                 s.w_size,
-                0
+                0,
               );
               dictionary = tmpDict;
               dictLength = s.w_size;
@@ -9306,10 +9306,10 @@ exports.deflateTune = deflateTune;
             this.next = null; /* next available space in codes[] */
 
             this.lens = new utils.Buf16(
-              320
+              320,
             ); /* temporary storage for code lengths */
             this.work = new utils.Buf16(
-              288
+              288,
             ); /* work area for code table building */
 
             /*
@@ -9525,7 +9525,7 @@ exports.deflateTune = deflateTune;
                 src,
                 end - state.wsize,
                 state.wsize,
-                0
+                0,
               );
               state.wnext = 0;
               state.whave = state.wsize;
@@ -9574,7 +9574,7 @@ exports.deflateTune = deflateTune;
             var len; /* length to copy for repeats, bits to drop */
             var ret; /* return code */
             var hbuf = new utils.Buf8(
-              4
+              4,
             ); /* buffer for gzip header crc calculation */
             var opts;
 
@@ -9836,7 +9836,7 @@ exports.deflateTune = deflateTune;
                           // - no need for additional size check
                           copy,
                           /*len + copy > state.head.extra_max - len ? state.head.extra_max : copy,*/
-                          len
+                          len,
                         );
                         //zmemcpy(state.head.extra + len, next,
                         //        len + copy > state.head.extra_max ?
@@ -10178,7 +10178,7 @@ exports.deflateTune = deflateTune;
                     state.lencode,
                     0,
                     state.work,
-                    opts
+                    opts,
                   );
                   state.lenbits = opts.bits;
 
@@ -10330,7 +10330,7 @@ exports.deflateTune = deflateTune;
                     state.lencode,
                     0,
                     state.work,
-                    opts
+                    opts,
                   );
                   // We have separate tables & no pointers. 2 commented lines below not needed.
                   // state.next_index = opts.table_index;
@@ -10356,7 +10356,7 @@ exports.deflateTune = deflateTune;
                     state.distcode,
                     0,
                     state.work,
-                    opts
+                    opts,
                   );
                   // We have separate tables & no pointers. 2 commented lines below not needed.
                   // state.next_index = opts.table_index;
@@ -10788,7 +10788,7 @@ exports.deflateTune = deflateTune;
                   strm,
                   strm.output,
                   strm.next_out,
-                  _out - strm.avail_out
+                  _out - strm.avail_out,
                 )
               ) {
                 state.mode = MEM;
@@ -10985,7 +10985,7 @@ exports.inflateUndermine = inflateUndermine;
             table,
             table_index,
             work,
-            opts
+            opts,
           ) {
             var bits = opts.bits;
             //here = opts.here; /* table entry for duplication */
@@ -11509,7 +11509,7 @@ exports.inflateUndermine = inflateUndermine;
             extra_bits,
             extra_base,
             elems,
-            max_length
+            max_length,
           ) {
             this.static_tree = static_tree; /* static tree or NULL */
             this.extra_bits = extra_bits; /* extra bits for each code or NULL */
@@ -11721,7 +11721,7 @@ exports.inflateUndermine = inflateUndermine;
             //    int max_code;              /* largest code with non zero frequency */
             //    ushf *bl_count;            /* number of codes at each bit length */
             var next_code = new Array(
-              MAX_BITS + 1
+              MAX_BITS + 1,
             ); /* next code value for each bit length */
             var code = 0; /* running code value */
             var bits; /* bit index */
@@ -11854,21 +11854,21 @@ exports.inflateUndermine = inflateUndermine;
               extra_lbits,
               LITERALS + 1,
               L_CODES,
-              MAX_BITS
+              MAX_BITS,
             );
             static_d_desc = new StaticTreeDesc(
               static_dtree,
               extra_dbits,
               0,
               D_CODES,
-              MAX_BITS
+              MAX_BITS,
             );
             static_bl_desc = new StaticTreeDesc(
               new Array(0),
               extra_blbits,
               0,
               BL_CODES,
-              MAX_BL_BITS
+              MAX_BL_BITS,
             );
 
             //static_init_done = true;
@@ -12014,7 +12014,7 @@ exports.inflateUndermine = inflateUndermine;
                   send_code(
                     s,
                     code + LITERALS + 1,
-                    ltree
+                    ltree,
                   ); /* send the length code */
                   extra = extra_lbits[code];
                   if (extra !== 0) {
@@ -12032,7 +12032,7 @@ exports.inflateUndermine = inflateUndermine;
                     send_bits(
                       s,
                       dist,
-                      extra
+                      extra,
                     ); /* send the extra distance bits */
                   }
                 } /* literal or match pair ? */
@@ -12321,7 +12321,7 @@ exports.inflateUndermine = inflateUndermine;
             send_bits(
               s,
               lcodes - 257,
-              5
+              5,
             ); /* not +255 as stated in appnote.txt */
             send_bits(s, dcodes - 1, 5);
             send_bits(s, blcodes - 4, 4); /* not -3 as stated in appnote.txt */
@@ -12419,7 +12419,7 @@ exports.inflateUndermine = inflateUndermine;
             send_bits(
               s,
               (STORED_BLOCK << 1) + (last ? 1 : 0),
-              3
+              3,
             ); /* send block type */
             copy_block(s, buf, stored_len, true); /* with header */
           }
@@ -12506,7 +12506,7 @@ exports.inflateUndermine = inflateUndermine;
                 s,
                 s.l_desc.max_code + 1,
                 s.d_desc.max_code + 1,
-                max_blindex + 1
+                max_blindex + 1,
               );
               compress_block(s, s.dyn_ltree, s.dyn_dtree);
             }
@@ -12660,6 +12660,6 @@ exports.inflateUndermine = inflateUndermine;
       ],
     },
     {},
-    [10]
+    [10],
   )(10);
 });

@@ -1,4 +1,4 @@
-Simple addon, to save the full website of one or more tabs as a png image either via a click on the toolbar icon or via a custom shortcut
+Simple addon, to save a snapshot of a website via a click on the toolbar icon or a custom shortcut
 
 [![](https://raw.githubusercontent.com/igorlogius/igorlogius/main/geFxAddon.png)](https://addons.mozilla.org/firefox/addon/save-website-as-image/)
 
