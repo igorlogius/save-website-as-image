@@ -1,9 +1,21 @@
 /* global browser */
 
-const manifest = browser.runtime.getManifest();
-const extname = manifest.name;
+//const manifest = browser.runtime.getManifest();
+//const extname = manifest.name;
 const aframes = "▖▘▝▗";
-let nid = null;
+
+async function captureTab(tabId, y, width, height) {
+  return await browser.tabs.captureTab(tabId, {
+    format: "jpeg",
+    quality: 90,
+    rect: {
+      x: 0,
+      y,
+      width,
+      height,
+    },
+  });
+}
 
 function saveAs(tabTitle, tabURL, linkURL, isObjectURL) {
   const link = document.createElement("a");
@@ -17,7 +29,7 @@ function saveAs(tabTitle, tabURL, linkURL, isObjectURL) {
   link.addEventListener("click", () => {
     setTimeout(() => {
       if (isObjectURL) {
-        window.URL.revokeObjectURL(zipobjurl);
+        window.URL.revokeObjectURL(linkURL);
       }
       link.remove();
     }, 5000);
@@ -69,76 +81,75 @@ async function getFromStorage(type, id, fallback) {
   return typeof tmp[id] === type ? tmp[id] : fallback;
 }
 
-async function onBAClicked(tab) {
+async function onBAClicked() {
   start_processing();
+
+  const tabs = (
+    await browser.tabs.query({ highlighted: true, currentWindow: true })
+  ).map((t) => {
+    return { id: t.id, title: t.title, url: t.url };
+  });
 
   const stepHeight = await getFromStorage("number", "stepHeight", 10000);
 
   let tmp = "";
 
-  try {
-    tmp = await browser.tabs.executeScript(tab.id, {
-      code: `var body = document.body,html = document.documentElement;
-    var h = Math.max( body.scrollHeight, body.offsetHeight,  html.clientHeight, html.scrollHeight, html.offsetHeight );
-    var w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.scrollWidth, html.offsetWidth );
-    [w,h,window.location.href, document.title];`,
-    });
-
-    if (tmp.length < 1) {
-      throw "Error: failed to get page dimensions";
-    }
-    // executeScript returns an array with the first element being the result
-    tmp = tmp[0];
-
-    let dataURI = "";
-
-    // only one image
-    if (tmp[1] <= stepHeight) {
-      // only generate one image
-
-      dataURI = await browser.tabs.captureTab(tab.id, {
-        format: "jpeg",
-        quality: 90,
-        rect: {
-          x: 0,
-          y: 0,
-          width: tmp[0],
-          height: tmp[1],
-        },
+  for (const tab of tabs) {
+    try {
+      tmp = await browser.tabs.executeScript(tab.id, {
+        code: `
+    (() => {
+        const body = document.body;
+        const html = document.documentElement;
+        const h = Math.max( body.scrollHeight, body.offsetHeight,  html.clientHeight, html.scrollHeight, html.offsetHeight );
+        const w = Math.max( body.scrollWidth, body.offsetWidth,  html.clientWidth, html.scrollWidth, html.offsetWidth );
+        return {"width": w, "height": h };
+    })()`,
       });
 
-      saveAs(tab.title, tab.url, dataURI, false);
-    } else {
-      let zip = new JSZip();
-      let i = 1;
-      let y_offset = 0;
-      while (tmp[1] > y_offset) {
-        dataURI = await browser.tabs.captureTab(tab.id, {
-          format: "jpeg",
-          quality: 90,
-          rect: {
-            x: 0,
-            y: y_offset,
-            width: tmp[0],
-            height:
-              tmp[1] > y_offset + stepHeight ? stepHeight : tmp[1] - y_offset,
-          },
-        });
-
-        y_offset = y_offset + stepHeight;
-
-        let blob = await fetch(dataURI).then((r) => r.blob());
-        zip.file(i + ".jpg", blob, { binary: true });
-        i++;
+      if (tmp.length < 1) {
+        throw "Error: failed to get page dimensions";
       }
+      // executeScript returns an array with the first element being the result
+      tmp = tmp[0];
 
-      const zipblob = await zip.generateAsync({ type: "blob" });
-      const zipobjurl = window.URL.createObjectURL(zipblob);
+      let dataURI = "";
 
-      saveAs(tab.title, tab.url, zipobjurl, true);
+      // only one image
+      if (tmp.height <= stepHeight) {
+        // only generate one image
+
+        dataURI = await captureTab(tab.id, 0, tmp.width, tmp.height);
+        saveAs(tab.title, tab.url, dataURI, false);
+      } else {
+        let zip = new JSZip();
+        let i = 1;
+        let y_offset = 0;
+        while (tmp.height > y_offset) {
+          dataURI = await captureTab(
+            tab.id,
+            y_offset,
+            tmp.width,
+            tmp.height > y_offset + stepHeight
+              ? stepHeight
+              : tmp.height - y_offset,
+          );
+
+          y_offset = y_offset + stepHeight;
+
+          const blob = await fetch(dataURI).then((r) => r.blob());
+          zip.file(i + ".jpg", blob, { binary: true });
+          i++;
+        }
+
+        const zipblob = await zip.generateAsync({ type: "blob" });
+        const zipobjurl = window.URL.createObjectURL(zipblob);
+
+        saveAs(tab.title, tab.url, zipobjurl, true);
+      }
+    } catch (e) {
+      console.error(e);
     }
-  } catch (e) {
-    console.error(e);
   }
   stop_processing();
 }
