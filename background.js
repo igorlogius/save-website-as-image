@@ -4,17 +4,21 @@
 //const extname = manifest.name;
 const aframes = "▖▘▝▗";
 
-async function captureTab(tabId, y, width, height) {
-  return await browser.tabs.captureTab(tabId, {
-    format: "jpeg",
-    quality: 90,
+async function captureTab(tabId, y, width, height, outputFormat) {
+  let config = {
+    format: outputFormat,
     rect: {
       x: 0,
       y,
       width,
       height,
     },
-  });
+  };
+
+  if (outputFormat === "jpeg") {
+    config["quality"] = 90;
+  }
+  return await browser.tabs.captureTab(tabId, config);
 }
 
 function saveAs(tabTitle, tabURL, linkURL, isObjectURL) {
@@ -91,6 +95,7 @@ async function onBAClicked() {
   });
 
   const stepHeight = await getFromStorage("number", "stepHeight", 10000);
+  const outputFormat = await getFromStorage("string", "outputFormat", "jpeg");
 
   let tmp = "";
 
@@ -119,7 +124,13 @@ async function onBAClicked() {
       if (tmp.height <= stepHeight) {
         // only generate one image
 
-        dataURI = await captureTab(tab.id, 0, tmp.width, tmp.height);
+        dataURI = await captureTab(
+          tab.id,
+          0,
+          tmp.width,
+          tmp.height,
+          outputFormat,
+        );
         saveAs(tab.title, tab.url, dataURI, false);
       } else {
         let zip = new JSZip();
@@ -133,12 +144,13 @@ async function onBAClicked() {
             tmp.height > y_offset + stepHeight
               ? stepHeight
               : tmp.height - y_offset,
+            outputFormat,
           );
 
           y_offset = y_offset + stepHeight;
 
           const blob = await fetch(dataURI).then((r) => r.blob());
-          zip.file(i + ".jpg", blob, { binary: true });
+          zip.file(i + "." + outputFormat, blob, { binary: true });
           i++;
         }
 

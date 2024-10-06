@@ -3195,14 +3195,14 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               i >= 252
                 ? 6
                 : i >= 248
-                ? 5
-                : i >= 240
-                ? 4
-                : i >= 224
-                ? 3
-                : i >= 192
-                ? 2
-                : 1;
+                  ? 5
+                  : i >= 240
+                    ? 4
+                    : i >= 224
+                      ? 3
+                      : i >= 192
+                        ? 2
+                        : 1;
           }
           _utf8len[254] = _utf8len[254] = 1; // Invalid sequence start
 
@@ -4937,10 +4937,10 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             typeof global !== "undefined"
               ? global
               : typeof self !== "undefined"
-              ? self
-              : typeof window !== "undefined"
-              ? window
-              : {},
+                ? self
+                : typeof window !== "undefined"
+                  ? window
+                  : {},
           );
         },
         {},
@@ -5884,8 +5884,8 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               mode === ~~mode
                 ? mode
                 : mode === true
-                ? c.Z_FINISH
-                : c.Z_NO_FLUSH;
+                  ? c.Z_FINISH
+                  : c.Z_NO_FLUSH;
 
             // Convert data if needed
             if (typeof data === "string") {
@@ -6284,14 +6284,14 @@ https://github.com/nodeca/pako/blob/master/LICENSE
               q >= 252
                 ? 6
                 : q >= 248
-                ? 5
-                : q >= 240
-                ? 4
-                : q >= 224
-                ? 3
-                : q >= 192
-                ? 2
-                : 1;
+                  ? 5
+                  : q >= 240
+                    ? 4
+                    : q >= 224
+                      ? 3
+                      : q >= 192
+                        ? 2
+                        : 1;
           }
           _utf8len[254] = _utf8len[254] = 1; // Invalid sequence start
 
@@ -8224,8 +8224,8 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     s.level === 9
                       ? 2
                       : s.strategy >= Z_HUFFMAN_ONLY || s.level < 2
-                      ? 4
-                      : 0,
+                        ? 4
+                        : 0,
                   );
                   put_byte(s, OS_CODE);
                   s.status = BUSY_STATE;
@@ -8247,8 +8247,8 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                     s.level === 9
                       ? 2
                       : s.strategy >= Z_HUFFMAN_ONLY || s.level < 2
-                      ? 4
-                      : 0,
+                        ? 4
+                        : 0,
                   );
                   put_byte(s, s.gzhead.os & 0xff);
                   if (s.gzhead.extra && s.gzhead.extra.length) {
@@ -8485,8 +8485,8 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 s.strategy === Z_HUFFMAN_ONLY
                   ? deflate_huff(s, flush)
                   : s.strategy === Z_RLE
-                  ? deflate_rle(s, flush)
-                  : configuration_table[s.level].func(s, flush);
+                    ? deflate_rle(s, flush)
+                    : configuration_table[s.level].func(s, flush);
 
               if (bstate === BS_FINISH_STARTED || bstate === BS_FINISH_DONE) {
                 s.status = FINISH_STATE;
@@ -11632,9 +11632,8 @@ exports.inflateUndermine = inflateUndermine;
             /* In a first pass, compute the optimal bit lengths (which may
              * overflow in the case of the bit length tree).
              */
-            tree[
-              s.heap[s.heap_max] * 2 + 1
-            ] /*.Len*/ = 0; /* root of the heap */
+            tree[s.heap[s.heap_max] * 2 + 1] /*.Len*/ =
+              0; /* root of the heap */
 
             for (h = s.heap_max + 1; h < HEAP_SIZE; h++) {
               n = s.heap[h];
@@ -11675,9 +11674,8 @@ exports.inflateUndermine = inflateUndermine;
                 bits--;
               }
               s.bl_count[bits]--; /* move one leaf down the tree */
-              s.bl_count[
-                bits + 1
-              ] += 2; /* move one overflow item as its brother */
+              s.bl_count[bits + 1] +=
+                2; /* move one overflow item as its brother */
               s.bl_count[max_length]--;
               /* The brother of the overflow item also moves one step up,
                * but this does not affect bl_count[max_length]

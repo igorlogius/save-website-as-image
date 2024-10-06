@@ -41,13 +41,13 @@ function onLoad() {
 	}
 	*/
 
-  ["stepHeight"].map((id) => {
+  ["stepHeight", "outputFormat"].map((id) => {
     browser.storage.local
       .get(id)
       .then((obj) => {
         let el = document.getElementById(id);
         let val = obj[id];
-
+        //console.debug(id, val);
         if (typeof val !== "undefined") {
           if (el.type === "checkbox") {
             el.checked = val;
@@ -59,6 +59,8 @@ function onLoad() {
             switch (id) {
               case "stepHeight":
                 return 10000;
+              case "outputFormat":
+                return "jpeg";
               default:
                 return 0;
             }
