@@ -41,7 +41,7 @@ function onLoad() {
 	}
 	*/
 
-  ["stepHeight", "outputFormat"].map((id) => {
+  ["stepHeight", "outputFormat", "scaleFactor"].map((id) => {
     browser.storage.local
       .get(id)
       .then((obj) => {
@@ -61,6 +61,8 @@ function onLoad() {
                 return 10000;
               case "outputFormat":
                 return "jpeg";
+              case "scaleFactor":
+                return 0;
               default:
                 return 0;
             }

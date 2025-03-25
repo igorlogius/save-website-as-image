@@ -4,7 +4,7 @@
 //const extname = manifest.name;
 const aframes = "▖▘▝▗";
 
-async function captureTab(tabId, y, width, height, outputFormat) {
+async function captureTab(tabId, y, width, height, outputFormat, scale) {
   let config = {
     format: outputFormat,
     rect: {
@@ -13,6 +13,7 @@ async function captureTab(tabId, y, width, height, outputFormat) {
       width,
       height,
     },
+    scale,
   };
 
   if (outputFormat === "jpeg") {
@@ -96,6 +97,11 @@ async function onBAClicked() {
 
   const stepHeight = await getFromStorage("number", "stepHeight", 10000);
   const outputFormat = await getFromStorage("string", "outputFormat", "jpeg");
+  let scaleFactor = await getFromStorage("number", "scaleFactor", 0);
+
+  if (scaleFactor === 0) {
+    scaleFactor = window.devicePixelRatio;
+  }
 
   let tmp = "";
 
@@ -130,6 +136,7 @@ async function onBAClicked() {
           tmp.width,
           tmp.height,
           outputFormat,
+          scaleFactor,
         );
         saveAs(tab.title, tab.url, dataURI, false);
       } else {
@@ -145,6 +152,7 @@ async function onBAClicked() {
               ? stepHeight
               : tmp.height - y_offset,
             outputFormat,
+            scaleFactor,
           );
 
           y_offset = y_offset + stepHeight;
