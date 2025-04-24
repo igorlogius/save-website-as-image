@@ -174,6 +174,21 @@ async function onBAClicked() {
   stop_processing();
 }
 
+const filter = {
+  urls: ["<all_urls>"],
+  properties: ["url"],
+};
+
+function onTabUpdated(tabId, changeInfo, tabInfo) {
+  if (changeInfo.url.startsWith("http")) {
+    browser.browserAction.enable(tabId);
+  } else {
+    browser.browserAction.disable(tabId);
+  }
+}
+
 browser.browserAction.onClicked.addListener(onBAClicked);
 browser.browserAction.setBadgeBackgroundColor({ color: "lightgray" });
 browser.browserAction.setBadgeText({ text: "+" });
+browser.browserAction.disable();
+browser.tabs.onUpdated.addListener(onTabUpdated, filter);
